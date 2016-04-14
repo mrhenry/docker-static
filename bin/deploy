@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+export SRC=/app
+if [[ "x$WERCKER_ROOT" != "x" ]]; then
+  export SRC="$WERCKER_ROOT"
+fi
+
+rm -rf /dist
+mkdir -p /dist
+
+if [[ -d "$SRC/.profile.d" ]]; then
+  echo "Copying .profile.d ..."
+  cp -r "$SRC/.profile.d" /dist/.profile.d
+fi
+
+if [[ -d "$SRC/assets" ]]; then
+  echo "Copying assets ..."
+  cp -r "$SRC/assets" /dist/assets
+fi
+
+if [[ -d "$SRC/data" ]]; then
+  echo "Copying data ..."
+  cp -r "$SRC/data" /dist/data
+fi
+
+echo 'Copying *.html ...'
+cp $SRC/*.html /dist/
+
+echo 'Copying Procfile ...'
+cp "$SRC/Procfile" /dist/
+
+echo 'Installing .profile.d/fhdevd.sh ...'
+mkdir -p /dist/.profile.d
+echo 'export PATH="/app/bin:$PATH"' > /dist/.profile.d/fhdevd.sh
+
+echo 'Installing bin/fhdevd ...'
+mkdir -p /dist/bin /dist/assets /dist/data
+cp /bin/fhdevd /dist/bin/fhdevd
+
+cd /dist
+hbuild "$@"
