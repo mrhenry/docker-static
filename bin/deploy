@@ -37,5 +37,11 @@ echo 'Installing bin/fhdevd ...'
 mkdir -p /dist/bin /dist/assets /dist/data
 cp /bin/fhdevd /dist/bin/fhdevd
 
+echo 'Installing .profile.d/fhserved.sh ...'
+echo 'export PATH="/app/bin:$PATH"' > /dist/.profile.d/fhserved.sh
+
+echo 'Installing bin/fhserved ...'
+cp /bin/fhserved /dist/bin/fhserved
+
 cd /dist
 hbuild "$@"
